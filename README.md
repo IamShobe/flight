@@ -1,4 +1,4 @@
-#Flight - Simplified PHP Framework
+# Flight - Simplified PHP Framework
 This framework is used for simple web navigation.
 Originally I wanted something similar to Python Django framework but simpler, 
 and I wanted to experience development of a web framework - just for a fun side project.
@@ -8,17 +8,17 @@ but I wanted something a little more complicated (with support of nested uris an
 so part of the code is taken from that repo and got wrapped with classes.  
 
 
-###How to Install?
+### How to Install?
 simply copy flight/ directory to your project lib folder!!
 
 In your project:
 ```php
 require_once "./lib/flight/loader.php";
 ```
-###Documentation 
+### Documentation 
 
-#####\Flight
-######class Dispatcher($base_dir, $urls, $use_static=true)
+##### \Flight
+###### class Dispatcher($base_dir, $urls, $use_static=true)
 $base_dir - is the directory of the application root.
 $urls - the root urls array using URL class objects.
 $use_static - true/false if the app uses static folder.
@@ -27,18 +27,18 @@ Dispatcher::dispatch(...$args) - the dispatch method - call at the end of the ma
 - ...$args - arguments to send to all the views.
 
 
-#####\Flight\URLS
-######class URL($regex, $handler, $methods = ["GET", "POST", "PUT", "DELETE", "PATCH"])
+##### \Flight\URLS
+###### class URL($regex, $handler, $methods = ["GET", "POST", "PUT", "DELETE", "PATCH"])
 $regex - the regex of the uri.
 $handler - an handler view that will be called.
 $methods - which methods should the url be active on.
 
-######class IncludeURLS($urls)
+###### class IncludeURLS($urls)
 
 $urls - the expanded sub urls that should be included from a different location.
 
-#####\Flight\Views
-######class View()
+##### \Flight\Views
+###### class View()
 View::__invoke($vars) - this method should be overrided by inheriting views.
 the return value should be a response function that will be activated once the view is on.
 
@@ -54,11 +54,11 @@ View::page($path, $vars) - render a phtml file.
 $path - the path of the file.
 $vars - the vars that should be passed to the template file.
 
-######class StaticFile() 
+###### class StaticFile() 
 static file serve view.
 
 
-###How to Use Example
+### How to Use Example
 .htaccess file:
 ```apacheconfig
 RewriteEngine On
