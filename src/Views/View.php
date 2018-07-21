@@ -75,8 +75,3 @@ class View
 }
 
 
-class StaticFile extends View {
-    public function __invoke($vars) {
-        return $this->static_file($vars["path"]);
-    }
-}

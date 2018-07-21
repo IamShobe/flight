@@ -12,13 +12,3 @@ class URL
         $this->methods = $methods;
     }
 }
-
-class IncludeURLS
-{
-    public $urls;
-
-    function __construct($urls)
-    {
-        $this->urls = $urls;
-    }
-}
