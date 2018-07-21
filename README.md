@@ -12,8 +12,12 @@ so part of the code is taken from that repo and got wrapped with classes.
 simply copy flight/ directory to your project lib folder!!
 
 In your project:
+```bash
+$ composer require iamshobe/flight
+$ composer update  # if already installed
+```
 ```php
-require_once "./lib/flight/loader.php";
+require_once "./vendor/autoload.php";
 ```
 ### Documentation 
 
