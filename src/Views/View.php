@@ -30,10 +30,25 @@ class View
         require "{$dispatcher->base_dir}/templates/{$path}";
         return trim(ob_get_clean());
     }
+    static function guess_mime_type($path) {
+        $mime_type = mime_content_type($path);
+        if ($mime_type == "text/plain") {
+            $path_parts = pathinfo($path);
+            switch ($path_parts['extension']) {
+                case "js":
+                    $mime_type = "text/javascript";
+                    break;
+                case "css":
+                    $mime_type = "text/css";
+                    break;
+            }
+        }
+        return $mime_type;
+    }
     function static_file($path) {
         $dispatcher = \Flight\Dispatcher::$dispatcher;
         $path = $dispatcher->base_dir."/static/".$path;
-        $mime_type = mime_content_type($path);
+        $mime_type = self::guess_mime_type($path);
         $file = fopen($path, "r");
         if (!$file) {
            return function () {
