@@ -9,9 +9,7 @@ so part of the code is taken from that repo and got wrapped with classes.
 
 
 ### How to Install?
-simply copy flight/ directory to your project lib folder!!
-
-In your project:
+in your project:
 ```bash
 $ composer require iamshobe/flight
 $ composer update  # if already installed
@@ -75,22 +73,27 @@ your project working tree:
 
 ```
 project_dir/
-+-- lib/
-|   +-- flight/
++-- vendor/
+|   +-- .....(libs)....
+|   +-- autoload.php
++-- src/
+|   +-- URLS
+|   |   +-- URLS.php
+|   +-- Views
+|   |   +-- Index.php
+|   |   +-- File.php
 +-- static/
 |  +-- js/
 |  |  +-- test.js
 +-- template/
 |  +-- index.phtml
 +-- index.php
-+-- urls.php
-+-- views.php
 ```
 
-views.php:
+src/Views/Index.php:
 ```php
 <?php namespace App\Views;
-use \Flight\Views\View as View;
+use \Flight\Views\View;
 
 
 class Index extends View {
@@ -99,6 +102,11 @@ class Index extends View {
         return $this->response($json, 200, ["content-type" => "application/json"]);
     }
 }
+```
+src/Views/File.php:
+```php
+<?php namespace App\Views;
+use \Flight\Views\View;
 
 class File extends View {
     public function __invoke($vars) {
@@ -107,19 +115,19 @@ class File extends View {
 }
 ```
 
-urls.php:
+src/URLS/URLS.php:
 ```php
 <?php namespace App\URLS;
-require_once './views.php';
+use \Flight\URLS\URL;
 
-use \Flight\URLS\URL as URL;
-
-
-function urls() {
-    return [
-        new URL("^lol$", new \App\Views\File()),
-        new URL("^(?P<hello>.*)$", new \App\Views\Index())
-    ];
+class URLS {
+    function __invoke()
+    {
+        return [
+            new URL("^lol$", new \App\Views\File()),
+            new URL("^(?P<hello>.*)$", new \App\Views\Index())
+        ];
+    }
 }
 ```
 
@@ -131,11 +139,11 @@ require_once './lib/flight/loader.php';
 require_once "./urls.php";
 
 
-(new \Flight\Dispatcher(__DIR__, App\URLS\urls()))->dispatch();
+(new \Flight\Dispatcher(__DIR__, (new App\URLS\URLS())()))->dispatch();
 ```
 
 templates/index.phtml:
-```php
+```phtml
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,32 +158,36 @@ templates/index.phtml:
 ```
 
 ### Nested URLS
-urls2.php
+URLS2.php
 ```php
 <?php namespace App\URLS;
-require_once './urls2.php';
+use \Flight\URLS\URL;
 
-use \Flight\URLS\URL as URL;
-
-
-function urls2() {
-    return [
-        new URL("^lol$", new \Flight\URLS\IncludeURLS(\App\URLS\urls()))
-    ];
+class URLS2 {
+    function __invoke()
+    {
+        return [
+            // this will cause a prefix of http://example.com/lol....
+            new URL("^lol$", new \Flight\URLS\IncludeURLS((new \App\URLS\URLS())())) 
+        ];
+    }
 }
 ```
-urls.php
+URLS.php
 ```php
 <?php namespace App\URLS;
-require_once './views.php';
+use \Flight\URLS\URL;
 
-use \Flight\URLS\URL as URL;
-
-
-function urls() {
-    return [
-        new URL("^lol$", new \App\Views\File(), ["GET"]),
-        new URL("^(?P<hello>.*)$", new \App\Views\Index(). ["POST"])
-    ];
+class URLS {
+    function __invoke()
+    {
+        return [
+            // this will cause a url of http://example.com/lollol
+            new URL("^lol$", new \App\Views\File(), ["GET"]),
+            // this will cause a prefix of http://example.com/lol(.*)
+            // where everything in brackets will be passed to hello var array.
+            new URL("^(?P<hello>.*)$", new \App\Views\Index(). ["POST"])
+        ];
+    }
 }
 ```
